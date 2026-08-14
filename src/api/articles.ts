@@ -26,6 +26,14 @@ interface ArticlesResponse {
   articles: Article[];
 }
 
+interface ArticleResponse {
+  article: Article;
+}
+
+interface ProfileResponse {
+  profile: ArticleAuthor;
+}
+
 interface RequestOptions extends RequestInit {
   token?: UserData["token"] | null;
 }
@@ -59,8 +67,17 @@ export const getArticles = async (token?: UserData["token"] | null): Promise<Art
   return payload.articles;
 };
 
+export const getArticle = async (slug: string, token?: UserData["token"] | null): Promise<Article> => {
+  const payload = await request<ArticleResponse>({
+    path: `/articles/${slug}`,
+    token,
+  });
+
+  return payload.article;
+};
+
 export const favoriteArticle = async (slug: string, token: UserData["token"]): Promise<Article> => {
-  const payload = await request<{ article: Article }>({
+  const payload = await request<ArticleResponse>({
     method: "POST",
     path: `/articles/${slug}/favorite`,
     token,
@@ -70,13 +87,33 @@ export const favoriteArticle = async (slug: string, token: UserData["token"]): P
 };
 
 export const unfavoriteArticle = async (slug: string, token: UserData["token"]): Promise<Article> => {
-  const payload = await request<{ article: Article }>({
+  const payload = await request<ArticleResponse>({
     method: "DELETE",
     path: `/articles/${slug}/favorite`,
     token,
   });
 
   return payload.article;
+};
+
+export const followAuthor = async (username: string, token: UserData["token"]): Promise<ArticleAuthor> => {
+  const payload = await request<ProfileResponse>({
+    method: "POST",
+    path: `/profiles/${username}/follow`,
+    token,
+  });
+
+  return payload.profile;
+};
+
+export const unfollowAuthor = async (username: string, token: UserData["token"]): Promise<ArticleAuthor> => {
+  const payload = await request<ProfileResponse>({
+    method: "DELETE",
+    path: `/profiles/${username}/follow`,
+    token,
+  });
+
+  return payload.profile;
 };
 
 export const formatArticleDate = (date: string): string =>
