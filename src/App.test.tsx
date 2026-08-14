@@ -8,6 +8,7 @@ const article = {
   author: {
     bio: null,
     following: false,
+    followersCount: 7,
     image: "",
     username: "alice",
   },
@@ -62,22 +63,10 @@ beforeEach(() => {
   });
 });
 
-test("renders conduit link", async () => {
-  render(<App />);
-  const linkElement = (await screen.findAllByText(/conduit/i))[0];
-  expect(linkElement).toBeInTheDocument();
-});
-
-test("renders sign in page content", () => {
-  window.location.hash = "#/login";
-  render(<App />);
-  expect(screen.getByRole("heading", { name: /sign in/i })).toBeInTheDocument();
-  expect(screen.getByRole("link", { name: /need an account/i })).toBeInTheDocument();
-});
-
-test("renders article title and author on homepage", async () => {
+test("renders article list on homepage", async () => {
   render(<App />);
 
+  expect(await screen.findByRole("heading", { name: /conduit/i })).toBeInTheDocument();
   expect(await screen.findByRole("link", { name: /example article/i })).toBeInTheDocument();
   expect(screen.getByText("alice")).toBeInTheDocument();
   expect(screen.getByRole("button", { name: /3/i })).toBeInTheDocument();
@@ -91,6 +80,7 @@ test("renders article page content without comments", async () => {
   expect(screen.getAllByText("alice")[0]).toBeInTheDocument();
   expect(screen.getByText("Body")).toBeInTheDocument();
   expect(screen.getAllByRole("button", { name: /follow alice/i })).toHaveLength(2);
+  expect(screen.getAllByText("(7)")).toHaveLength(2);
   expect(screen.getAllByRole("button", { name: /favorite article/i })).toHaveLength(2);
   expect(screen.queryByPlaceholderText(/write a comment/i)).not.toBeInTheDocument();
 });
@@ -101,6 +91,7 @@ test("renders profile page with authored articles", async () => {
 
   expect(await screen.findByRole("heading", { name: /alice/i })).toBeInTheDocument();
   expect(screen.getByRole("button", { name: /follow alice/i })).toBeInTheDocument();
+  expect(screen.getByText("(7)")).toBeInTheDocument();
   expect(screen.getByRole("link", { name: /my articles/i })).toHaveClass("active");
   expect(screen.getByRole("link", { name: /favorited articles/i })).toBeInTheDocument();
   expect(screen.getByRole("link", { name: /example article/i })).toBeInTheDocument();

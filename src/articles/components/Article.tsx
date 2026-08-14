@@ -36,6 +36,9 @@ const Article = () => {
       >
         <i className="ion-plus-round" />
         &nbsp; {article.author.following ? "Unfollow" : "Follow"} {article.author.username}
+        {typeof article.author.followersCount === "number" ? (
+          <span className="counter"> ({article.author.followersCount})</span>
+        ) : null}
       </button>
       &nbsp;
       <button

@@ -6,6 +6,7 @@ const FALLBACK_AVATAR = `${process.env.PUBLIC_URL || ""}/avatar-placeholder.svg`
 export interface ArticleAuthor {
   bio: string | null;
   following: boolean;
+  followersCount?: number | null;
   image: string | null;
   username: string;
 }
