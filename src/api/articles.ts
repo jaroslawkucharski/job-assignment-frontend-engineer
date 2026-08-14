@@ -19,6 +19,7 @@ export interface Article {
   favorited: boolean;
   favoritesCount: number;
   slug: string;
+  tagList?: string[];
   title: string;
   updatedAt: string;
 }
@@ -43,6 +44,13 @@ interface GetArticlesOptions {
   author?: string;
   favorited?: string;
   token?: UserData["token"] | null;
+}
+
+interface SaveArticleInput {
+  body: string;
+  description: string;
+  tagList?: string[];
+  title: string;
 }
 
 const request = async <T,>({ path, token, ...options }: RequestOptions & { path: string }): Promise<T> => {
@@ -86,6 +94,32 @@ export const getArticles = async ({ author, favorited, token }: GetArticlesOptio
 
 export const getArticle = async (slug: string, token?: UserData["token"] | null): Promise<Article> => {
   const payload = await request<ArticleResponse>({
+    path: `/articles/${slug}`,
+    token,
+  });
+
+  return payload.article;
+};
+
+export const createArticle = async (article: SaveArticleInput, token: UserData["token"]): Promise<Article> => {
+  const payload = await request<ArticleResponse>({
+    body: JSON.stringify({
+      article,
+    }),
+    method: "POST",
+    path: "/articles",
+    token,
+  });
+
+  return payload.article;
+};
+
+export const updateArticle = async (slug: string, article: SaveArticleInput, token: UserData["token"]): Promise<Article> => {
+  const payload = await request<ArticleResponse>({
+    body: JSON.stringify({
+      article,
+    }),
+    method: "PUT",
     path: `/articles/${slug}`,
     token,
   });

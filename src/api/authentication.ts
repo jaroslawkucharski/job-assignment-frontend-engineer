@@ -1,11 +1,16 @@
-import { AuthenticationApiError, LoginCredentials, UserData } from "../authentication/types";
+import { AuthenticationApiError, LoginCredentials, UpdateUserInput, UserData } from "../authentication/types";
 import { API_URL } from "./config";
 
-async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+interface RequestOptions extends RequestInit {
+  token?: string;
+}
+
+async function request<T>(path: string, { token, ...options }: RequestOptions = {}): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
     headers: {
       Accept: "application/json",
+      ...(token ? { Authorization: `Token ${token}` } : {}),
       ...(options.body ? { "Content-Type": "application/json" } : {}),
       ...options.headers,
     },
@@ -45,10 +50,18 @@ export async function loginUser(credentials: LoginCredentials): Promise<UserData
 }
 
 export async function getCurrentUser(token: string): Promise<UserData> {
+  const payload = await request<{ user: UserData }>("/user", { token });
+
+  return payload.user;
+}
+
+export async function updateCurrentUser(user: UpdateUserInput, token: string): Promise<UserData> {
   const payload = await request<{ user: UserData }>("/user", {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
+    body: JSON.stringify({
+      user,
+    }),
+    method: "PUT",
+    token,
   });
 
   return payload.user;

@@ -1,13 +1,14 @@
 import React from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
-import { Article, ArticleList } from "./articles";
+import Article from "./articles/components/Article";
+import ArticleList from "./articles/components/ArticleList";
 import { Footer } from "./components/footer";
 import { Navigation } from "./components/navigation";
-import Editor from "./Editor";
+import Editor from "./editor/components/Editor";
 import { AuthenticationProvider, LoginRegister, Logout } from "./authentication";
-import Profile from "./profile";
-import Settings from "./Settings";
+import Profile from "./profile/components/Profile";
+import Settings from "./settings/components/Settings";
 
 function App() {
   return (
