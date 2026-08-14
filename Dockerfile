@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:14.17.3 AS build-env
+FROM node:20-alpine AS build-env
 WORKDIR /app
 ADD package.json package-lock.json ./
 RUN npm ci
