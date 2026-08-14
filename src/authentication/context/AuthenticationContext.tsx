@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import { getCurrentUser, loginUser } from "../../api/authentication";
+import { getCurrentUser, loginUser, updateCurrentUser } from "../../api/authentication";
 import { clearStoredToken, readStoredToken, storeSessionToken } from "../helpers/authenticationStorage";
-import { AuthenticationContextValue, LoginCredentials, UserData } from "../types";
+import { AuthenticationContextValue, LoginCredentials, UpdateUserInput, UserData } from "../types";
 import { WithChildrenProps } from "../../types/common";
 
 export const AuthenticationContext = createContext<AuthenticationContextValue | undefined>(undefined);
@@ -52,6 +52,20 @@ export const AuthenticationProvider = ({ children }: WithChildrenProps) => {
     setUser(null);
   };
 
+  const updateUser = async (nextUserData: UpdateUserInput): Promise<UserData> => {
+    if (!token) {
+      throw new Error("You need to be logged in to update settings.");
+    }
+
+    const nextUser = await updateCurrentUser(nextUserData, token);
+
+    storeSessionToken(nextUser.token);
+    setToken(nextUser.token);
+    setUser(nextUser);
+
+    return nextUser;
+  };
+
   return (
     <AuthenticationContext.Provider
       value={{
@@ -60,6 +74,7 @@ export const AuthenticationProvider = ({ children }: WithChildrenProps) => {
         login,
         logout,
         token,
+        updateUser,
         user,
       }}
     >

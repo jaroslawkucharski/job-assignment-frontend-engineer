@@ -3,6 +3,14 @@ export interface LoginCredentials {
   password: string;
 }
 
+export interface UpdateUserInput {
+  bio?: string;
+  email?: string;
+  image?: string;
+  password?: string;
+  username?: string;
+}
+
 export interface UserData {
   bio: string | null;
   email: string;
@@ -17,6 +25,7 @@ export interface AuthenticationContextValue {
   login: (credentials: LoginCredentials) => Promise<UserData>;
   logout: () => void;
   token: string | null;
+  updateUser: (user: UpdateUserInput) => Promise<UserData>;
   user: UserData | null;
 }
 
