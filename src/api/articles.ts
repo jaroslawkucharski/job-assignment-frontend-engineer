@@ -38,6 +38,12 @@ interface RequestOptions extends RequestInit {
   token?: UserData["token"] | null;
 }
 
+interface GetArticlesOptions {
+  author?: string;
+  favorited?: string;
+  token?: UserData["token"] | null;
+}
+
 const request = async <T,>({ path, token, ...options }: RequestOptions & { path: string }): Promise<T> => {
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
@@ -58,9 +64,19 @@ const request = async <T,>({ path, token, ...options }: RequestOptions & { path:
   return payload as T;
 };
 
-export const getArticles = async (token?: UserData["token"] | null): Promise<Article[]> => {
+export const getArticles = async ({ author, favorited, token }: GetArticlesOptions = {}): Promise<Article[]> => {
+  const searchParams = new URLSearchParams();
+
+  if (author) {
+    searchParams.set("author", author);
+  }
+
+  if (favorited) {
+    searchParams.set("favorited", favorited);
+  }
+
   const payload = await request<ArticlesResponse>({
-    path: "/articles",
+    path: searchParams.size > 0 ? `/articles?${searchParams.toString()}` : "/articles",
     token,
   });
 
@@ -110,6 +126,15 @@ export const unfollowAuthor = async (username: string, token: UserData["token"])
   const payload = await request<ProfileResponse>({
     method: "DELETE",
     path: `/profiles/${username}/follow`,
+    token,
+  });
+
+  return payload.profile;
+};
+
+export const getProfile = async (username: string, token?: UserData["token"] | null): Promise<ArticleAuthor> => {
+  const payload = await request<ProfileResponse>({
+    path: `/profiles/${username}`,
     token,
   });
 

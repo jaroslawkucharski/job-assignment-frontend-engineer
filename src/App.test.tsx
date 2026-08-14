@@ -37,6 +37,15 @@ beforeEach(() => {
       };
     }
 
+    if (url.endsWith("/profiles/alice")) {
+      return {
+        json: async () => ({
+          profile: article.author,
+        }),
+        ok: true,
+      };
+    }
+
     return {
       json: async () => ({
         articles: [article],
@@ -84,4 +93,15 @@ test("renders article page content without comments", async () => {
   expect(screen.getAllByRole("button", { name: /follow alice/i })).toHaveLength(2);
   expect(screen.getAllByRole("button", { name: /favorite article/i })).toHaveLength(2);
   expect(screen.queryByPlaceholderText(/write a comment/i)).not.toBeInTheDocument();
+});
+
+test("renders profile page with authored articles", async () => {
+  window.location.hash = "#/profile/alice";
+  render(<App />);
+
+  expect(await screen.findByRole("heading", { name: /alice/i })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: /follow alice/i })).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: /my articles/i })).toHaveClass("active");
+  expect(screen.getByRole("link", { name: /favorited articles/i })).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: /example article/i })).toBeInTheDocument();
 });
