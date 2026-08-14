@@ -6,7 +6,7 @@ import { Footer } from "./components/footer";
 import { Navigation } from "./components/navigation";
 import Editor from "./Editor";
 import { AuthenticationProvider, LoginRegister, Logout } from "./authentication";
-import Profile from "./Profile";
+import Profile from "./profile";
 import Settings from "./Settings";
 
 function App() {

@@ -18,7 +18,7 @@ const ArticleList = () => {
   useEffect(() => {
     let isMounted = true;
 
-    getArticles(token)
+    getArticles({ token })
       .then((articles) => {
         if (!isMounted) {
           return;
