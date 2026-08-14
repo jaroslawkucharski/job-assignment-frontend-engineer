@@ -1,8 +1,9 @@
 import React from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
-import Article from "./Article";
-import ArticleList from "./ArticleList";
+import { Article, ArticleList } from "./articles";
+import { Footer } from "./components/footer";
+import { Navigation } from "./components/navigation";
 import Editor from "./Editor";
 import { AuthenticationProvider, LoginRegister, Logout } from "./authentication";
 import Profile from "./Profile";
@@ -12,6 +13,7 @@ function App() {
   return (
     <AuthenticationProvider>
       <Router>
+        <Navigation />
         <Switch>
           <Route path="/editor" exact component={Editor} />
           <Route path="/editor/:slug" exact component={Editor} />
@@ -24,6 +26,7 @@ function App() {
           <Route path="/:slug" exact component={Article} />
           <Route path="/" component={ArticleList} />
         </Switch>
+        <Footer />
       </Router>
     </AuthenticationProvider>
   );
