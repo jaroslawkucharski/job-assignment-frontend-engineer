@@ -1,4 +1,11 @@
-export default function Logout() {
+import React from "react";
+
+import { useAuthentication } from "./authentication";
+import { WithChildrenProps } from "./types/common";
+
+export default function Layout({ children }: WithChildrenProps) {
+  const { isAuthenticated } = useAuthentication();
+
   return (
     <>
       <nav className="navbar navbar-light">
@@ -25,19 +32,31 @@ export default function Logout() {
                 &nbsp;Settings
               </a>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/login">
-                Sign in
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/register">
-                Sign up
-              </a>
-            </li>
+            {isAuthenticated ? (
+              <li className="nav-item">
+                <a className="nav-link" href="/#/logout">
+                  Logout
+                </a>
+              </li>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <a className="nav-link" href="/#/login">
+                    Sign in
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="/#/register">
+                    Sign up
+                  </a>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </nav>
+
+      {children}
 
       <footer>
         <div className="container">
