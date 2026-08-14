@@ -94,6 +94,9 @@ const Profile = () => {
               >
                 <i className="ion-plus-round" />
                 &nbsp; {profile.following ? "Unfollow" : "Follow"} {profile.username}
+                {typeof profile.followersCount === "number" ? (
+                  <span className="counter"> ({profile.followersCount})</span>
+                ) : null}
               </button>
             </div>
           </div>
