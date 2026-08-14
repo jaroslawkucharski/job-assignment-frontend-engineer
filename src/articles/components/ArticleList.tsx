@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
-import { Article, favoriteArticle, formatArticleDate, getArticles, getAuthorImage, unfavoriteArticle } from "../api/articles";
-import { useAuthentication } from "../authentication";
+import { Article, favoriteArticle, formatArticleDate, getArticles, getAuthorImage, unfavoriteArticle } from "../../api/articles";
+import { useAuthentication } from "../../authentication";
 
 const ArticleList = () => {
   const history = useHistory();
