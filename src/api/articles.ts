@@ -84,8 +84,10 @@ export const getArticles = async ({ author, favorited, token }: GetArticlesOptio
     searchParams.set("favorited", favorited);
   }
 
+  const queryString = searchParams.toString();
+
   const payload = await request<ArticlesResponse>({
-    path: searchParams.size > 0 ? `/articles?${searchParams.toString()}` : "/articles",
+    path: queryString ? `/articles?${queryString}` : "/articles",
     token,
   });
 
